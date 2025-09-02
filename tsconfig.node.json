@@ -1,0 +1,15 @@
+{
+  "include": ["vite.config.*", "src/main/**/*", "src/preload/**/*", "src/renderer/**/*"],
+  "compilerOptions": {
+    "jsx": "react",
+    "composite": true,
+    "types": ["electron-vite/node"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/renderer/src/*"],
+      "@renderer/*": ["src/renderer/src/*"]
+    },
+    "module": "es2015",
+    "moduleResolution": "bundler"
+  }
+}

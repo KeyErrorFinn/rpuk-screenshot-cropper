@@ -1,0 +1,36 @@
+/* *,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+} */
+
+/* ul {
+  list-style: none;
+} */
+
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+html {
+    background: rgb(255 255 255 / 0.5%);
+    overflow: hidden;
+}
+
+body {
+    overflow: hidden;
+
+    &:not(:has(#root .app.maximized)) {
+        border-radius: 12px;
+    }
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+}
