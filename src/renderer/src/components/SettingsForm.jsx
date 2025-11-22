@@ -1,13 +1,23 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@compui/form"
-import { Input } from "@compui/input"
-import { Button } from "@compui/button"
-import { Switch } from "@compui/switch"
-import { toast } from "sonner"
+
+import {
+    Form,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormControl,
+    FormMessage
+} from "@components-ui/form"
+import { Input } from "@components-ui/input"
+import { Button } from "@components-ui/button"
+import { Switch } from "@components-ui/switch"
+
 import { useSettings } from "@renderer/context/SettingsContext";
+
 
 const schema = z.object({
     screenshotFolderPath: z.string().min(1, "Select a screenshot folder"),

@@ -12,7 +12,10 @@ const api = {
     selectFolder: () => ipcRenderer.invoke('dialog:selectFolder'),
 
     getStorage: (key) => ipcRenderer.invoke('storage:get', key),
-    setStorage: (key, value) => ipcRenderer.invoke('storage:set', key, value)
+    setStorage: (key, value) => ipcRenderer.invoke('storage:set', key, value),
+
+    getScreenshots: (folderPath) => ipcRenderer.invoke("images:get-screenshots", folderPath),
+    getCroppedImages: (croppedPath) => ipcRenderer.invoke("images:get-cropped-images", croppedPath),
 }
 
 try {

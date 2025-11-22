@@ -10,6 +10,10 @@
   list-style: none;
 } */
 
+* {
+    box-sizing: border-box;
+}
+
 html,
 body,
 #root {
@@ -17,18 +21,7 @@ body,
     width: 100%;
 }
 
-html {
-    background: rgb(255 255 255 / 0.5%);
-    overflow: hidden;
-}
 
-body {
-    overflow: hidden;
-
-    &:not(:has(#root .app.maximized)) {
-        border-radius: 12px;
-    }
-}
 
 #root {
     display: flex;

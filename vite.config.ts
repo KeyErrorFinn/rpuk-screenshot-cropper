@@ -14,8 +14,8 @@ export default defineConfig({
         resolve: {
             alias: {
                 '@renderer': resolve('src/renderer/src'),
-                '@comp': resolve('src/renderer/src/components'),
-                '@compui': resolve('src/renderer/src/components/ui')
+                '@components': resolve('src/renderer/src/components'),
+                '@components-ui': resolve('src/renderer/src/components/ui')
             }
         },
         plugins: [react(), tailwindcss()]
