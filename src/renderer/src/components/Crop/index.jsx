@@ -86,13 +86,16 @@ const Crop = ({
         setSelectedImages(allSelected);
     }, [screenshots, setSelectedImages]);
 
-
     return (
         <>
         <div className='relative flex my-2 mx-10 justify-center'>
             <div className='absolute items-center left-0'>
-                <Button variant="secondary" className="size-fit py-0.5 px-2">
-                    <TGP className="">{selectedImagesLength} / {screenshots?.length}</TGP>
+                <Button variant="secondary" className="size-fit py-0.5 px-3">
+                    <TGP className="">{selectedImagesLength > 0 ?
+                        `${selectedImagesLength} / ${screenshots?.length}`
+                        :
+                        (screenshots ? screenshots.length : "~") }
+                    </TGP>
                 </Button>
             </div>
             <div className='flex gap-2 items-center'>

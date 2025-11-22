@@ -5,6 +5,7 @@ import { join, extname } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
 import icon from '../../resources/icon.png?asset'
+import { da } from 'zod/v4/locales';
 
 const store = new Store()
 
@@ -102,7 +103,7 @@ function createWindow() {
 
 
     // Get Cropped Images
-    ipcMain.handle("images:get-cropped-images", async (_, croppedPath) => {
+    ipcMain.handle("images:get-cropped-folders", async (_, croppedPath) => {
         if (!croppedPath) return {};
 
         const entries = await fs.readdir(croppedPath, { withFileTypes: true });
@@ -121,34 +122,47 @@ function createWindow() {
                 return dateB - dateA; // newest first
             });
 
-        const result = {};
-        for (const folder of dateFolders) {
-            const folderPath = join(croppedPath, folder);
-            const files = await fs.readdir(folderPath, { withFileTypes: true });
+        const dateFoldersInfo = await Promise.all(
+            dateFolders.map(async (folder) => {
+                const folderPath = join(croppedPath, folder);
+                const entries = await fs.readdir(folderPath, { withFileTypes: true });
+                const files = entries
+                    .filter(file => file.isFile());
 
-            // Read files with metadata
-            let imageData = await Promise.all(
-                files
-                    .filter(entry => entry.isFile())
-                    .map(async entry => {
-                        const filePath = join(folderPath, entry.name);
-                        const buffer = await fs.readFile(filePath);
-                        const stats = await fs.stat(filePath);
-                        return {
-                            name: entry.name,
-                            buffer,              // raw file buffer
-                            modified: stats.mtime, // Date object
-                        };
-                    })
-            );
+                return { folderName: folder, imageCount: files.length };
+            })
+        )
+        
+        return dateFoldersInfo
 
-            // Sort images newest → oldest
-            imageData.sort((a, b) => b.modified - a.modified);
+        // const result = {};
+        // for (const folder of dateFolders) {
+        //     const folderPath = join(croppedPath, folder);
+        //     const files = await fs.readdir(folderPath, { withFileTypes: true });
 
-            result[folder] = imageData;
-        }
+        //     // Read files with metadata
+        //     let imageData = await Promise.all(
+        //         files
+        //         .filter(entry => entry.isFile())
+        //         .map(async entry => {
+        //             const filePath = join(folderPath, entry.name);
+        //             const buffer = await fs.readFile(filePath);
+        //             const stats = await fs.stat(filePath);
+        //             return {
+        //                 name: entry.name,
+        //                 buffer,              // raw file buffer
+        //                 modified: stats.mtime, // Date object
+        //             };
+        //         })
+        //     );
 
-        return result;
+        //     // Sort images newest → oldest
+        //     imageData.sort((a, b) => b.modified - a.modified);
+
+        //     result[folder] = imageData;
+        // }
+
+        // return result;
     });
 
 

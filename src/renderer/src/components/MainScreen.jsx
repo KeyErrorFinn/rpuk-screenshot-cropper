@@ -4,6 +4,7 @@ import imageCompression from "browser-image-compression";
 
 import SettingsForm from '@components/SettingsForm'
 import Crop from '@components/Crop'
+import View from '@components/View'
 import {
     Tabs,
     TabsContent,
@@ -22,13 +23,6 @@ import {
 } from "@components-ui/sheet"
 import { Separator } from "@components-ui/separator"
 import { Button } from '@components-ui/button';
-import {
-    Accordion,
-    AccordionItem,
-    AccordionTrigger,
-    AccordionContent
-} from '@components-ui/accordion';
-import { AspectRatio } from "@components-ui/aspect-ratio"
 
 import { useSettings } from "@renderer/context/SettingsContext";
 
@@ -55,6 +49,8 @@ const MainScreen = () => {
         const receivedScreenshots = await window.api.getScreenshots(userSettings.screenshotFolderPath);
         setScreenshots(receivedScreenshots.map(() => null));
 
+        if (receivedScreenshots.length === 0) setLoadingScreenshots(false);
+        
         let completed = 0;
 
         receivedScreenshots.forEach(async ({ buffer }, index) => {
@@ -79,9 +75,7 @@ const MainScreen = () => {
             });
 
             completed++;
-            if (completed === receivedScreenshots.length) {
-                setLoadingScreenshots(false);
-            }
+            if (completed === receivedScreenshots.length) setLoadingScreenshots(false);
         });
     }, [userSettings?.screenshotFolderPath])
     
@@ -116,43 +110,28 @@ const MainScreen = () => {
 
         const croppedPath = `${userSettings.destinationFolderPath}/cropped`;
 
-        const imagesByDate = await window.api.getCroppedImages(croppedPath);
+        const imagesByDate = await window.api.getCroppedFolders(croppedPath);
+        console.log(imagesByDate)
 
-        // Store folder with placeholders upfront
-        const folders = {};
-        for (const [folder, images] of Object.entries(imagesByDate)) {
-            folders[folder] = { 
-                loaded: false, 
-                raw: images, 
-                images: Array(images.length).fill(null) // placeholders
-            };
-        }
+        // // Store folder with placeholders upfront
+        // const folders = {};
+        // for (const [folder, images] of Object.entries(imagesByDate)) {
+        //     folders[folder] = { 
+        //         loaded: false, 
+        //         raw: images, 
+        //         images: Array(images.length).fill(null) // placeholders
+        //     };
+        // }
 
-        croppedImagesCacheRef.current = folders;
-        setCroppedFolders(folders);
+        // croppedImagesCacheRef.current = folders;
+        // setCroppedFolders(folders);
     }, [userSettings?.destinationFolderPath]);
-    // const getCroppedImages = useCallback(async () => {
-    //     if (!userSettings?.destinationFolderPath) return;
-
-    //     const croppedPath = `${userSettings.destinationFolderPath}/cropped`;
-
-    //     const imagesByDate = await window.api.getCroppedImages(croppedPath);
-
-    //     // Just store folder + empty placeholder, not processed images
-    //     const folders = {};
-    //     for (const [folder, images] of Object.entries(imagesByDate)) {
-    //         folders[folder] = { loaded: false, raw: images, images: [] };
-    //     }
-
-    //     croppedImagesCacheRef.current = folders;
-    //     setCroppedFolders(folders);
-    // }, [userSettings?.destinationFolderPath]);
-
 
 
     // LOAD IMAGES IN FOLDER FUNCTION ------------------------------------------
     const loadFolderImages = async (folder) => {
         const folderData = croppedFolders[folder];
+        console.log(folderData)
         if (!folderData || folderData.loaded) return;
 
         let completed = 0;
@@ -219,17 +198,15 @@ const MainScreen = () => {
 
     // GETS FOLDERS ON START --------------------------------------------------- 
     useEffect(() => {
-        if (!userSettings?.destinationFolderPath) return;
-
-        if (croppedImagesCacheRef.current) {
+        if (croppedImagesCacheRef.current && userSettings?.screenshotFolderPath) {
             setCroppedFolders(croppedImagesCacheRef.current);
             return;
         }
 
-        if (!loadingScreenshots && userSettings?.destinationFolderPath) {
+        if (userSettings?.destinationFolderPath) {
             getCroppedImages();
         }
-    }, [loadingScreenshots, getCroppedImages]);
+    }, [getCroppedImages]);
 
 
     // REFRESHES CROPPED IMAGES ------------------------------------------------ 
@@ -239,7 +216,7 @@ const MainScreen = () => {
         getCroppedImages();
     };
     
-    
+
     return (
         <>
         <Tabs defaultValue="crop" className="w-full gap-0 overflow-hidden items-center pt-2">
@@ -279,45 +256,10 @@ const MainScreen = () => {
                 />
             </TabsContent>
             <TabsContent value="view" className="size-full overflow-hidden px-6">
-                <Accordion 
-                    type="multiple" 
-                    className="w-full"
-                    onValueChange={(openFolders) => {
-                        openFolders.forEach(folder => loadFolderImages(folder));
-                    }}
-                >
-                    {Object.entries(croppedFolders).map(([folder, data]) => (
-                        <AccordionItem key={folder} value={folder}>
-                            <AccordionTrigger>{folder}</AccordionTrigger>
-                            <AccordionContent>
-                                {data.images.length === 0 ? (
-                                    <p className="text-sm text-muted-foreground">No images</p>
-                                ) : (
-                                    <div className="grid gap-4 justify-center grid-cols-[repeat(auto-fit,minmax(150px,200px))]">
-                                        {data.images.map((img, idx) => (
-                                            <AspectRatio
-                                                key={idx}
-                                                ratio={16 / 9}
-                                                className="rounded-lg shadow border bg-muted animate-pulse"
-                                            >
-                                                {img ? (
-                                                    <img
-                                                        src={img.basicUrl}
-                                                        alt={img.name}
-                                                        className="w-full h-full object-cover"
-                                                        loading="lazy"
-                                                    />
-                                                ) : (
-                                                    <div className="w-full h-full bg-muted" />
-                                                )}
-                                            </AspectRatio>
-                                        ))}
-                                    </div>
-                                )}
-                            </AccordionContent>
-                        </AccordionItem>
-                    ))}
-                </Accordion>
+                <View 
+                    croppedFolders={croppedFolders}
+                    loadFolderImages={loadFolderImages}
+                />
             </TabsContent>
         </Tabs>
         </>

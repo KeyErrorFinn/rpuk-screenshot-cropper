@@ -15,7 +15,7 @@ const api = {
     setStorage: (key, value) => ipcRenderer.invoke('storage:set', key, value),
 
     getScreenshots: (folderPath) => ipcRenderer.invoke("images:get-screenshots", folderPath),
-    getCroppedImages: (croppedPath) => ipcRenderer.invoke("images:get-cropped-images", croppedPath),
+    getCroppedFolders: (croppedPath) => ipcRenderer.invoke("images:get-cropped-folders", croppedPath),
 }
 
 try {
