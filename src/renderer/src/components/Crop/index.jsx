@@ -35,7 +35,6 @@ const Crop = ({
             ...prev,
             [index]: !prev[index]
         }))
-        console.log(selectedImages)
     }, []);
 
     const openDisplay = useCallback((e, imageIndex) => {
@@ -44,7 +43,7 @@ const Crop = ({
         setDisplayOpen(true)
     }, []);
 
-    const closeDisplay = useCallback((e, image) => {
+    const closeDisplay = useCallback(() => {
         setDisplayOpen(false)
         setDisplayImage(null)
     }, []);
@@ -141,7 +140,6 @@ const Crop = ({
                                 >
                                     {img ? 
                                         <CropImage
-                                            key={index}
                                             index={index}
                                             image={img}
                                             openDisplay={openDisplay}

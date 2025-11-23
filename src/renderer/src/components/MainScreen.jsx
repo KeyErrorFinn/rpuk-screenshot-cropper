@@ -30,13 +30,13 @@ import { useSettings } from "@renderer/context/SettingsContext";
 const MainScreen = () => {
     const { userSettings } = useSettings();
 
-    const [loadingScreenshots, setLoadingScreenshots] = useState(true);
     const [screenshots, setScreenshots] = useState(null);
     const screenshotsCacheRef = useRef(null);
     const [selectedScreenshots, setSelectedScreenshots] = useState({})
 
-    const croppedImagesCacheRef = useRef(null);
     const [croppedFolders, setCroppedFolders] = useState({}); 
+    const [openedFolders, setOpenedFolders] = useState([]);
+    const croppedImagesCacheRef = useRef(null);
     const [selectedCroppedImages, setSelectedCroppedImages] = useState({});
 
 
@@ -48,8 +48,6 @@ const MainScreen = () => {
         setScreenshots(null)
         const receivedScreenshots = await window.api.getScreenshots(userSettings.screenshotFolderPath);
         setScreenshots(receivedScreenshots.map(() => null));
-
-        if (receivedScreenshots.length === 0) setLoadingScreenshots(false);
         
         let completed = 0;
 
@@ -75,7 +73,6 @@ const MainScreen = () => {
             });
 
             completed++;
-            if (completed === receivedScreenshots.length) setLoadingScreenshots(false);
         });
     }, [userSettings?.screenshotFolderPath])
     
@@ -114,7 +111,8 @@ const MainScreen = () => {
         const folders = {};
         for (const {folderName, imageCount} of folderNames) {
             folders[folderName] = { 
-                loaded: false, 
+                loaded: false,
+                opened: false,
                 images: Array(imageCount).fill(null) // placeholders
             };
         }
@@ -232,6 +230,10 @@ const MainScreen = () => {
                 <View 
                     croppedFolders={croppedFolders}
                     loadFolderImages={loadFolderImages}
+                    openedFolders={openedFolders}
+                    setOpenedFolders={setOpenedFolders}
+                    selectedImages={selectedCroppedImages}
+                    setSelectedImages={setSelectedCroppedImages}
                 />
             </TabsContent>
         </Tabs>
