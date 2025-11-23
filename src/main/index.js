@@ -104,7 +104,7 @@ function createWindow() {
 
     // Get Cropped Images
     ipcMain.handle("images:get-cropped-folders", async (_, croppedPath) => {
-        if (!croppedPath) return {};
+        if (!croppedPath) return [];
 
         const entries = await fs.readdir(croppedPath, { withFileTypes: true });
 
@@ -134,36 +134,36 @@ function createWindow() {
         )
         
         return dateFoldersInfo
-
-        // const result = {};
-        // for (const folder of dateFolders) {
-        //     const folderPath = join(croppedPath, folder);
-        //     const files = await fs.readdir(folderPath, { withFileTypes: true });
-
-        //     // Read files with metadata
-        //     let imageData = await Promise.all(
-        //         files
-        //         .filter(entry => entry.isFile())
-        //         .map(async entry => {
-        //             const filePath = join(folderPath, entry.name);
-        //             const buffer = await fs.readFile(filePath);
-        //             const stats = await fs.stat(filePath);
-        //             return {
-        //                 name: entry.name,
-        //                 buffer,              // raw file buffer
-        //                 modified: stats.mtime, // Date object
-        //             };
-        //         })
-        //     );
-
-        //     // Sort images newest → oldest
-        //     imageData.sort((a, b) => b.modified - a.modified);
-
-        //     result[folder] = imageData;
-        // }
-
-        // return result;
     });
+
+
+    ipcMain.handle("images:get-folder-images", async (_, croppedPath, folderName) => {
+        if (!croppedPath || !folderName) return {};
+
+        const folderPath = join(croppedPath, folderName);
+        const files = await fs.readdir(folderPath, { withFileTypes: true });
+
+        const folderImages = await Promise.all(
+            files
+            .filter(entry => entry.isFile())
+            .map(async entry => {
+                const filePath = join(folderPath, entry.name);
+                const buffer = await fs.readFile(filePath);
+                const stats = await fs.stat(filePath);
+                return {
+                    name: entry.name,
+                    buffer,              // raw file buffer
+                    modified: stats.mtime, // Date object
+                };
+            })
+        )
+
+        folderImages.sort((a, b) => b.modified - a.modified);
+        
+        return folderImages;
+    });
+
+    
 
 
     // HMR for renderer base on electron-vite cli.

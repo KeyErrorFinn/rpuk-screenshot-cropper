@@ -122,31 +122,37 @@ const Crop = ({
         <ScrollArea className="my-2 overflow-hidden size-full">
             <div className="pt-0 items-center size-full justify-center flex flex-col">
                 <div className="p-2 size-full justify-center">
-                    <div className="grid gap-4 justify-center grid-cols-[repeat(auto-fit,minmax(150px,200px))]">
+                    <div className="grid gap-4 justify-center grid-cols-[repeat(auto-fit,minmax(150px,185px))]">
                         {screenshots === null ?
                             <div className="flex items-center justify-center p-4">
                                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                             </div>
                             :
                             screenshots.map((img, index) => (
-                                img ? 
-                                    <CropImage
-                                        key={index}
-                                        index={index}
-                                        image={img}
-                                        openDisplay={openDisplay}
-                                        selected={!!selectedImages[index]}
-                                        toggleSelected={toggleSelected}
-                                    />
-                                : 
-                                    <AspectRatio
-                                        key={index}
-                                        ratio={16 / 9}
-                                        className="
-                                            relative w-full overflow-hidden rounded-lg shadow-lg border-2
-                                            transform transition duration-300"
-                                    ><Skeleton className="size-full" /></AspectRatio>
-                            ))
+                                <AspectRatio
+                                    key={index}
+                                    ratio={16 / 9}
+                                    className={cn(`
+                                        relative w-full overflow-hidden rounded-lg shadow-lg border-2 select-none
+                                        transform transition duration-300`,
+                                        !!selectedImages[index] ? "scale-105" : "hover:scale-105"
+                                    )}
+                                    onClick={(e) => toggleSelected(e, index)}
+                                >
+                                    {img ? 
+                                        <CropImage
+                                            key={index}
+                                            index={index}
+                                            image={img}
+                                            openDisplay={openDisplay}
+                                            selected={!!selectedImages[index]}
+                                        />
+                                    :
+                                        <Skeleton className="size-full" />
+                                    }
+                                </AspectRatio>
+                                )
+                            )
                         }
                     </div>
                 </div>

@@ -109,34 +109,34 @@ const MainScreen = () => {
         if (!userSettings?.destinationFolderPath) return;
 
         const croppedPath = `${userSettings.destinationFolderPath}/cropped`;
+        const folderNames = await window.api.getCroppedFolders(croppedPath);
 
-        const imagesByDate = await window.api.getCroppedFolders(croppedPath);
-        console.log(imagesByDate)
+        const folders = {};
+        for (const {folderName, imageCount} of folderNames) {
+            folders[folderName] = { 
+                loaded: false, 
+                images: Array(imageCount).fill(null) // placeholders
+            };
+        }
 
-        // // Store folder with placeholders upfront
-        // const folders = {};
-        // for (const [folder, images] of Object.entries(imagesByDate)) {
-        //     folders[folder] = { 
-        //         loaded: false, 
-        //         raw: images, 
-        //         images: Array(images.length).fill(null) // placeholders
-        //     };
-        // }
-
-        // croppedImagesCacheRef.current = folders;
-        // setCroppedFolders(folders);
+        croppedImagesCacheRef.current = folders;
+        setCroppedFolders(folders);
     }, [userSettings?.destinationFolderPath]);
 
 
     // LOAD IMAGES IN FOLDER FUNCTION ------------------------------------------
     const loadFolderImages = async (folder) => {
+        if (!userSettings?.destinationFolderPath) return;
+
         const folderData = croppedFolders[folder];
-        console.log(folderData)
         if (!folderData || folderData.loaded) return;
+
+        const croppedPath = `${userSettings.destinationFolderPath}/cropped`;
+        const folderImages = await window.api.getFolderImages(croppedPath, folder);
 
         let completed = 0;
 
-        folderData.raw.forEach(async ({ buffer, name }, index) => {
+        folderImages.forEach(async ({ buffer, name }, index) => {
             const blob = new Blob([buffer.buffer], { type: "image/*" });
             const compressed = await imageCompression(blob, {
                 maxWidthOrHeight: 200,
@@ -156,7 +156,7 @@ const MainScreen = () => {
                 };
 
                 completed++;
-                if (completed === folderData.raw.length) {
+                if (completed === folderImages.length) {
                     newFolder.loaded = true;
                 }
 
@@ -167,33 +167,6 @@ const MainScreen = () => {
             });
         });
     };
-    // const loadFolderImages = async (folder) => {
-    //     const folderData = croppedFolders[folder];
-    //     if (!folderData || folderData.loaded) return; // already loaded
-
-    //     const processed = await Promise.all(
-    //         folderData.raw.map(async ({ buffer, name }) => {
-    //             const blob = new Blob([buffer.buffer], { type: "image/*" });
-    //             const compressed = await imageCompression(blob, {
-    //                 maxWidthOrHeight: 200,
-    //                 useWebWorker: false,
-    //                 fileType: "image/webp",
-    //             });
-    //             return {
-    //                 name,
-    //                 basicUrl: URL.createObjectURL(compressed),
-    //                 displayUrl: URL.createObjectURL(blob),
-    //                 selected: false,
-    //                 toggleSelected: null,
-    //             };
-    //         })
-    //     );
-
-    //     setCroppedFolders(prev => ({
-    //         ...prev,
-    //         [folder]: { ...folderData, loaded: true, images: processed }
-    //     }));
-    // };
 
 
     // GETS FOLDERS ON START --------------------------------------------------- 
