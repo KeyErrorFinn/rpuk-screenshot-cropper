@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 
 import CropImage from './CropImage';
+import ImageDisplay, { openDisplayImage } from '@components/tabs/ImageDisplay'
 import { Button } from '@components-ui/button';
 import { ScrollArea } from "@components-ui/scroll-area"
 import { Separator } from "@components-ui/separator"
@@ -20,7 +21,8 @@ import { TGP } from "@components-ui/typography"
 import { cn } from "@renderer/lib/utils"
 import './Crop.scss'
 
-const Crop = ({
+
+const CropTab = ({
     screenshots,
     selectedImages,
     setSelectedImages,
@@ -37,32 +39,10 @@ const Crop = ({
         }))
     }, []);
 
-    const openDisplay = useCallback((e, imageIndex) => {
-        e.stopPropagation()
-        setDisplayImage(imageIndex)
-        setDisplayOpen(true)
-    }, []);
-
-    const closeDisplay = useCallback(() => {
-        setDisplayOpen(false)
-        setDisplayImage(null)
-    }, []);
-
-    const nextDisplayImage = useCallback((e) => {
-        e.stopPropagation()
-        setDisplayImage(imageIndex => {
-            if (imageIndex === screenshots.length - 1) return 0
-            return imageIndex+1
-        })
-    }, [screenshots]);
-
-    const prevDisplayImage = useCallback((e) => {
-        e.stopPropagation()
-        setDisplayImage(imageIndex => {
-            if (imageIndex === 0) return screenshots.length - 1
-            return imageIndex-1
-        })
-    }, [screenshots]);
+    const openDisplay = useCallback((e, imageIndex) => openDisplayImage(
+        setDisplayOpen, setDisplayImage,
+        e, imageIndex
+    ), []);
 
 
     const selectedImagesLength = Object.keys(selectedImages).filter(key => selectedImages[key]).length;
@@ -84,6 +64,7 @@ const Crop = ({
 
         setSelectedImages(allSelected);
     }, [screenshots, setSelectedImages]);
+
 
     return (
         <>
@@ -154,81 +135,30 @@ const Crop = ({
                         }
                     </div>
                 </div>
-                {displayOpen && 
-                    <div onClick={closeDisplay} className="fixed z-30 inset-0 top-8 bg-black/70 flex items-center justify-center">
-                        <img src={screenshots[displayImage].displayUrl} onClick={(e) => e.stopPropagation()} alt="Preview"
-                            className={cn("max-h-[90%] max-w-[90%]", selectedImages[displayImage] && "shadow")}
-                        loading="lazy" />
-                        <Button
-                            className="bg-red-700 hover:bg-red-700/90 absolute size-8 top-2 right-2"
-                        ><X /></Button>
-                        <Button variant="secondary" onClick={nextDisplayImage}
-                            className="absolute right-2 size-8"
-                        ><ChevronRight /></Button>
-                        <Button variant="secondary" onClick={prevDisplayImage}
-                            className="absolute left-2 size-8"
-                        ><ChevronLeft /></Button>
-                        <TGP className="absolute bottom-1">{displayImage+1} / {screenshots.length}</TGP>
-                        <Button variant="secondary" onClick={(e) => toggleSelected(e, displayImage)}
-                            className={cn("absolute right-2 bottom-2 size-8",
-                                selectedImages[displayImage] ?
-                                "bg-green-500 hover:bg-green-500/90"
-                                :
-                                "bg-red-500 hover:bg-red-500/90"
-                            )}
-                        >{selectedImages[displayImage] ? <SquareCheckBig /> : <Square />}</Button>
-                    </div>
-                }
+                <ImageDisplay
+                    displayState={[displayOpen, setDisplayOpen]}
+                    callbackUpdater={screenshots}
+                    
+                    allImages={screenshots}
+                    specificImageIndex={displayImage}
+                    selectedImage={selectedImages[displayImage]}
+                    
+                    setCloseDisplayImage={() => setDisplayImage(null)}
+                    setNextDisplayImage={() => setDisplayImage(imageIndex => {
+                        if (imageIndex === screenshots.length - 1) return 0
+                        return imageIndex+1
+                    })}
+                    setPrevDisplayImage={() => setDisplayImage(imageIndex => {
+                        if (imageIndex === 0) return screenshots.length - 1
+                        return imageIndex-1
+                    })}
+
+                    toggleSelected={(e) => toggleSelected(e, displayImage)}
+                />
             </div>
         </ScrollArea>
-
-            {/* <Input placeholder="Type something..." className="w-full max-w-sm" />
-            <Input placeholder="Type something..." className="w-full max-w-sm" />
-            <Input placeholder="Type something..." className="w-full max-w-sm" />
-            <Input placeholder="Type something..." className="w-full max-w-sm" />
-
-            <Card className="min-w-md p-3">
-                <h3 className="text-lg font-bold">Card Title</h3>
-                <p className="text-sm text-gray-600">This is a card description.</p>
-                <Button className="mt-2">Card Action</Button>
-            </Card>
-
-            <Toggle className="bg-green-500" />
-
-            <Accordion type="single" collapsible className="w-md">
-                <AccordionItem value="item-1">
-                    <AccordionTrigger>Accordion Item 1</AccordionTrigger>
-                    <AccordionContent>
-                        This is the content of the first accordion item.
-                    </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-2">
-                    <AccordionTrigger>Accordion Item 2</AccordionTrigger>
-                    <AccordionContent>
-                        Content for the second item.
-                    </AccordionContent>
-                </AccordionItem>
-            </Accordion>
-
-            <AlertDialog>
-                <AlertDialogTrigger asChild>
-                    <Button>Open Alert</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            This action cannot be undone.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="flex justify-end space-x-2">
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction>Confirm</AlertDialogAction>
-                    </div>
-                </AlertDialogContent>
-            </AlertDialog> */}
         </>
     )
 };
 
-export default React.memo(Crop)
+export default React.memo(CropTab)

@@ -1,13 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import {
-    X,
-    ChevronRight,
-    ChevronLeft,
-    Square,
-    SquareCheckBig
-} from 'lucide-react';
 
 import ViewImage from './ViewImage'
+import ImageDisplay, { openDisplayImage } from '@components/tabs/ImageDisplay'
 import {
     Accordion,
     AccordionItem,
@@ -17,14 +11,11 @@ import {
 import { AspectRatio } from "@components-ui/aspect-ratio"
 import { ScrollArea } from "@components-ui/scroll-area"
 import { Skeleton } from "@components-ui/skeleton"
-import { Button } from '@components-ui/button';
-import { TGP } from "@components-ui/typography"
 
 import { cn } from "@renderer/lib/utils"
-import { fa } from 'zod/v4/locales';
 
 
-const View = ({
+const ViewTab = ({
     croppedFolders,
     loadFolderImages,
     openedFolders,
@@ -32,8 +23,8 @@ const View = ({
     selectedImages,
     setSelectedImages
 }) => {
-    const [displayImage, setDisplayImage] = useState({folder: null, index: null})
     const [displayOpen, setDisplayOpen] = useState(false)
+    const [displayImage, setDisplayImage] = useState({folder: null, index: null})
     
     const toggleSelected = useCallback((e, folder, index) => {
         e.stopPropagation()
@@ -46,33 +37,11 @@ const View = ({
         }))
     }, []);
 
-    const openDisplay = useCallback((e, folder, imageIndex) => {
-        e.stopPropagation()
-        setDisplayImage({folder: folder, index: imageIndex})
-        setDisplayOpen(true)
-    }, []);
+    const openDisplay = useCallback((e, folder, imageIndex) => openDisplayImage(
+        setDisplayOpen, setDisplayImage,
+        e, {folder: folder, index: imageIndex}
+    ), []);
 
-    const closeDisplay = useCallback(() => {
-        setDisplayOpen(false)
-        setDisplayImage({folder: null, index: null})
-    }, []);
-
-    const nextDisplayImage = useCallback((e) => {
-        e.stopPropagation()
-        setDisplayImage(prev => {
-            if (prev.index === croppedFolders[prev.folder]["images"].length - 1) return {folder: prev.folder, index: 0}
-            return {folder: prev.folder, index: prev.index+1}
-        })
-    }, [croppedFolders]);
-
-    const prevDisplayImage = useCallback((e) => {
-        e.stopPropagation()
-        setDisplayImage(prev => {
-            if (prev.index === 0) return {folder: prev.folder, index: croppedFolders[prev.folder]["images"].length - 1}
-            return {folder: prev.folder, index: prev.index-1}
-        })
-    }, [croppedFolders]);
- 
 
     return (
         <ScrollArea className="my-2 overflow-hidden size-full">
@@ -82,7 +51,6 @@ const View = ({
                 onValueChange={(newOpenedFolders) => {
                     // find which folder was just clicked
                     const newlyOpened = newOpenedFolders.find(f => !openedFolders.includes(f));
-                    const newlyClosed = openedFolders.find(f => !newOpenedFolders.includes(f));
 
                     if (newlyOpened) {
                         loadFolderImages(newlyOpened);
@@ -130,33 +98,28 @@ const View = ({
                     </AccordionItem>
                 ))}
             </Accordion>
-            {displayOpen && 
-                <div onClick={closeDisplay} className="fixed z-30 inset-0 top-8 bg-black/70 flex items-center justify-center">
-                    <img src={croppedFolders[displayImage.folder]["images"][displayImage.index]?.displayUrl} onClick={(e) => e.stopPropagation()} alt="Preview"
-                        className={cn("max-h-[90%] max-w-[90%]", selectedImages[displayImage] && "shadow")}
-                    loading="lazy" />
-                    <Button
-                        className="bg-red-700 hover:bg-red-700/90 absolute size-8 top-2 right-2"
-                    ><X /></Button>
-                    <Button variant="secondary" onClick={nextDisplayImage}
-                        className="absolute right-2 size-8"
-                    ><ChevronRight /></Button>
-                    <Button variant="secondary" onClick={prevDisplayImage}
-                        className="absolute left-2 size-8"
-                    ><ChevronLeft /></Button>
-                    <TGP className="absolute bottom-1">{displayImage.index+1} / {croppedFolders[displayImage.folder]["images"].length}</TGP>
-                    <Button variant="secondary" onClick={(e) => toggleSelected(e, displayImage)}
-                        className={cn("absolute right-2 bottom-2 size-8",
-                            selectedImages[displayImage] ?
-                            "bg-green-500 hover:bg-green-500/90"
-                            :
-                            "bg-red-500 hover:bg-red-500/90"
-                        )}
-                    >{selectedImages[displayImage] ? <SquareCheckBig /> : <Square />}</Button>
-                </div>
-            }
+            <ImageDisplay
+                displayState={[displayOpen, setDisplayOpen]}
+                callbackUpdater={croppedFolders}
+                
+                allImages={croppedFolders[displayImage.folder]?.images}
+                specificImageIndex={displayImage.index}
+                selectedImage={selectedImages[displayImage.folder]?.[displayImage.index]}
+                
+                setCloseDisplayImage={() => setDisplayImage({folder: null, index: null})}
+                setNextDisplayImage={() => setDisplayImage(prev => {
+                    if (prev.index === croppedFolders[prev.folder].images.length - 1) return {folder: prev.folder, index: 0}
+                    return {folder: prev.folder, index: prev.index+1}
+                })}
+                setPrevDisplayImage={() => setDisplayImage(prev => {
+                    if (prev.index === 0) return {folder: prev.folder, index: croppedFolders[prev.folder]["images"].length - 1}
+                    return {folder: prev.folder, index: prev.index-1}
+                })}
+
+                toggleSelected={(e) => toggleSelected(e, displayImage.folder, displayImage.index)}
+            />
         </ScrollArea>
     )
 };
 
-export default React.memo(View)
+export default React.memo(ViewTab)

@@ -3,8 +3,8 @@ import { Settings } from 'lucide-react'
 import imageCompression from "browser-image-compression";   
 
 import SettingsForm from '@components/SettingsForm'
-import Crop from '@components/Crop'
-import View from '@components/View'
+import Crop from '@components/tabs/CropTab'
+import View from '@components/tabs/ViewTab'
 import {
     Tabs,
     TabsContent,
