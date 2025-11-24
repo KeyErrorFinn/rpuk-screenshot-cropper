@@ -1,7 +1,7 @@
 import React from 'react';
 import { Check, Eye } from 'lucide-react';
 
-import { cn } from "@renderer/lib/utils"
+import { cn } from "@renderer/lib/utils";
 
 const CropImage = ({
     index,
@@ -48,6 +48,6 @@ const CropImage = ({
         </div>
         </>
     );
-}
+};
 
 export default React.memo(CropImage);

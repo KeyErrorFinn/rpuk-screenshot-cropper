@@ -8,9 +8,9 @@ import {
 } from 'lucide-react';
 
 import { Button } from '@components-ui/button';
-import { TGP } from "@components-ui/typography"
+import { TGP } from "@components-ui/typography";
 
-import { cn } from "@renderer/lib/utils"
+import { cn } from "@renderer/lib/utils";
 
 
 export const openDisplayImage = (
@@ -19,9 +19,9 @@ export const openDisplayImage = (
     e,
     image
 ) => {
-    e.stopPropagation()
-    setDisplayImage(image)
-    setDisplayOpen(true)
+    e.stopPropagation();
+    setDisplayImage(image);
+    setDisplayOpen(true);
 };
 
 const ImageDisplay = ({
@@ -38,21 +38,21 @@ const ImageDisplay = ({
     
     toggleSelected
 }) => {
-    const [displayOpen, setDisplayOpen] = displayState
+    const [displayOpen, setDisplayOpen] = displayState;
 
     const closeDisplay = useCallback(() => {
-        setDisplayOpen(false)
-        setCloseDisplayImage()
+        setDisplayOpen(false);
+        setCloseDisplayImage();
     }, []);
 
     const nextDisplayImage = useCallback((e) => {
-        e.stopPropagation()
-        setNextDisplayImage()
+        e.stopPropagation();
+        setNextDisplayImage();
     }, [callbackUpdater]);
 
     const prevDisplayImage = useCallback((e) => {
-        e.stopPropagation()
-        setPrevDisplayImage()
+        e.stopPropagation();
+        setPrevDisplayImage();
     }, [callbackUpdater]);
 
 
@@ -84,7 +84,7 @@ const ImageDisplay = ({
             </div>
         }
         </>
-    )
-}
+    );
+};
 
-export default ImageDisplay
+export default ImageDisplay;

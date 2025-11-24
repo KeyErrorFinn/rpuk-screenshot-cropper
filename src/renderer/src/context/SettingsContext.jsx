@@ -9,7 +9,7 @@ export function SettingsProvider({ children }) {
         async function loadSettings() {
             if (window.api) {
                 const settings = await window.api.getStorage("settings");
-                setUserSettings(settings)
+                setUserSettings(settings);
             }
         }
         loadSettings();

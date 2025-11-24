@@ -1,7 +1,7 @@
 import React from 'react';
 import { Check, Eye } from 'lucide-react';
 
-import { cn } from "@renderer/lib/utils"
+import { cn } from "@renderer/lib/utils";
 
 const ViewImage = ({
     index,
@@ -49,6 +49,6 @@ const ViewImage = ({
         </div>
         </>
     );
-}
+};
 
 export default React.memo(ViewImage);

@@ -1,18 +1,18 @@
 import React, { useState, useCallback } from 'react';
 
-import ViewImage from './ViewImage'
-import ImageDisplay, { openDisplayImage } from '@components/tabs/ImageDisplay'
+import ViewImage from './ViewImage';
+import ImageDisplay, { openDisplayImage } from '@components/tabs/ImageDisplay';
 import {
     Accordion,
     AccordionItem,
     AccordionTrigger,
     AccordionContent
 } from '@components-ui/accordion';
-import { AspectRatio } from "@components-ui/aspect-ratio"
-import { ScrollArea } from "@components-ui/scroll-area"
-import { Skeleton } from "@components-ui/skeleton"
+import { AspectRatio } from "@components-ui/aspect-ratio";
+import { ScrollArea } from "@components-ui/scroll-area";
+import { Skeleton } from "@components-ui/skeleton";
 
-import { cn } from "@renderer/lib/utils"
+import { cn } from "@renderer/lib/utils";
 
 
 const ViewTab = ({
@@ -23,18 +23,18 @@ const ViewTab = ({
     selectedImages,
     setSelectedImages
 }) => {
-    const [displayOpen, setDisplayOpen] = useState(false)
-    const [displayImage, setDisplayImage] = useState({folder: null, index: null})
+    const [displayOpen, setDisplayOpen] = useState(false);
+    const [displayImage, setDisplayImage] = useState({folder: null, index: null});
     
     const toggleSelected = useCallback((e, folder, index) => {
-        e.stopPropagation()
+        e.stopPropagation();
         setSelectedImages(prev => ({
             ...prev,
             [folder]: {
                 ...(prev[folder] || {}),
                 [index]: !((prev[folder] || {})[index])
             }
-        }))
+        }));
     }, []);
 
     const openDisplay = useCallback((e, folder, imageIndex) => openDisplayImage(
@@ -49,12 +49,11 @@ const ViewTab = ({
                 type="multiple" 
                 className="w-full pr-4"
                 onValueChange={(newOpenedFolders) => {
-                    // find which folder was just clicked
                     const newlyOpened = newOpenedFolders.find(f => !openedFolders.includes(f));
 
                     if (newlyOpened) {
                         loadFolderImages(newlyOpened);
-                    };
+                    }
 
                     setOpenedFolders(newOpenedFolders);
                 }}
@@ -108,18 +107,18 @@ const ViewTab = ({
                 
                 setCloseDisplayImage={() => setDisplayImage({folder: null, index: null})}
                 setNextDisplayImage={() => setDisplayImage(prev => {
-                    if (prev.index === croppedFolders[prev.folder].images.length - 1) return {folder: prev.folder, index: 0}
-                    return {folder: prev.folder, index: prev.index+1}
+                    if (prev.index === croppedFolders[prev.folder].images.length - 1) return {folder: prev.folder, index: 0};
+                    return {folder: prev.folder, index: prev.index+1};
                 })}
                 setPrevDisplayImage={() => setDisplayImage(prev => {
-                    if (prev.index === 0) return {folder: prev.folder, index: croppedFolders[prev.folder]["images"].length - 1}
-                    return {folder: prev.folder, index: prev.index-1}
+                    if (prev.index === 0) return {folder: prev.folder, index: croppedFolders[prev.folder]["images"].length - 1};
+                    return {folder: prev.folder, index: prev.index-1};
                 })}
 
                 toggleSelected={(e) => toggleSelected(e, displayImage.folder, displayImage.index)}
             />
         </ScrollArea>
-    )
+    );
 };
 
-export default React.memo(ViewTab)
+export default React.memo(ViewTab);

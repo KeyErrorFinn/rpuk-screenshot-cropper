@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Minus, Maximize, Minimize, X, Camera } from "lucide-react"
+import { Minus, Maximize, Minimize, X, Camera } from "lucide-react";
 
 import {
     Menubar,
-} from "@components-ui/menubar"
+} from "@components-ui/menubar";
 
-import './menubar.scss'
+import './menubar.scss';
 
 const AppMenuBar = () => {
     const [isMaximized, setIsMaximized] = useState(false);
@@ -17,9 +17,9 @@ const AppMenuBar = () => {
         }
     }, []);
 
-    const handleMinimize = () => window.api?.minimize()
-    const handleMaximize = () => {window.api?.maximize()}
-    const handleClose = () => window.api?.close()
+    const handleMinimize = () => window.api?.minimize();
+    const handleMaximize = () => {window.api?.maximize();};
+    const handleClose = () => window.api?.close();
 
     return (
         <Menubar className="app-menu-bar rounded-none bg-secondary h-8 drag flex justify-center w-full select-none border-none z-40">
@@ -42,6 +42,6 @@ const AppMenuBar = () => {
             </div>
         </Menubar>
     );
-}
+};
 
-export default AppMenuBar
+export default AppMenuBar;

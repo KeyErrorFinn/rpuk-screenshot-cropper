@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
     Form,
@@ -11,10 +11,10 @@ import {
     FormLabel,
     FormControl,
     FormMessage
-} from "@components-ui/form"
-import { Input } from "@components-ui/input"
-import { Button } from "@components-ui/button"
-import { Switch } from "@components-ui/switch"
+} from "@components-ui/form";
+import { Input } from "@components-ui/input";
+import { Button } from "@components-ui/button";
+import { Switch } from "@components-ui/switch";
 
 import { useSettings } from "@renderer/context/SettingsContext";
 
@@ -23,7 +23,7 @@ const schema = z.object({
     screenshotFolderPath: z.string().min(1, "Select a screenshot folder"),
     destinationFolderPath: z.string().min(1, "Select a destination folder"),
     keepOriginalImage: z.boolean(),
-})
+});
 
 const SettingsForm = ({ formID, onValidationChange = null, ...props }) => {
     const { userSettings, setUserSettings } = useSettings();
@@ -35,28 +35,28 @@ const SettingsForm = ({ formID, onValidationChange = null, ...props }) => {
             destinationFolderPath: "",
             keepOriginalImage: true,
         },
-    })
+    });
 
     async function handleSelectFolder(fieldName) {
         if (window.api?.selectFolder) {
-            const folder = await window.api.selectFolder()
+            const folder = await window.api.selectFolder();
             if (folder) {
-                form.setValue(fieldName, folder, { shouldValidate: true })
+                form.setValue(fieldName, folder, { shouldValidate: true });
             }
         }
     }
 
     useEffect(() => {
         if (onValidationChange) {
-            onValidationChange(form.formState.isValid)
+            onValidationChange(form.formState.isValid);
         }
-    }, [form.formState.isValid, onValidationChange])
+    }, [form.formState.isValid, onValidationChange]);
 
 
     function onSubmit(values) {
-        window.api.setStorage("settings", values)
-        setUserSettings(values)
-        toast.success("Settings have been saved")
+        window.api.setStorage("settings", values);
+        setUserSettings(values);
+        toast.success("Settings have been saved");
     }
 
     return (
@@ -120,7 +120,7 @@ const SettingsForm = ({ formID, onValidationChange = null, ...props }) => {
                 </form>
             </Form>
         </div>
-    )
-}
+    );
+};
 
-export default SettingsForm
+export default SettingsForm;

@@ -1,42 +1,35 @@
 import React, { useState, useCallback } from 'react';
-import {
-    Loader2,
-    X,
-    ChevronRight,
-    ChevronLeft,
-    Square,
-    SquareCheckBig, 
-    RefreshCw
-} from 'lucide-react';
+import { Loader2, RefreshCw } from 'lucide-react';
 
 import CropImage from './CropImage';
-import ImageDisplay, { openDisplayImage } from '@components/tabs/ImageDisplay'
+import ImageDisplay, { openDisplayImage } from '@components/tabs/ImageDisplay';
 import { Button } from '@components-ui/button';
-import { ScrollArea } from "@components-ui/scroll-area"
-import { Separator } from "@components-ui/separator"
-import { AspectRatio } from "@components-ui/aspect-ratio"
-import { Skeleton } from "@components-ui/skeleton"
-import { TGP } from "@components-ui/typography"
+import { ScrollArea } from "@components-ui/scroll-area";
+import { Separator } from "@components-ui/separator";
+import { AspectRatio } from "@components-ui/aspect-ratio";
+import { Skeleton } from "@components-ui/skeleton";
+import { TGP } from "@components-ui/typography";
 
-import { cn } from "@renderer/lib/utils"
-import './Crop.scss'
+import { cn } from "@renderer/lib/utils";
+import './Crop.scss';
 
 
 const CropTab = ({
     screenshots,
     selectedImages,
     setSelectedImages,
-    refreshImages
+    refreshImages,
+    cropScreenshots
 }) => {
-    const [displayImage, setDisplayImage] = useState(null)
-    const [displayOpen, setDisplayOpen] = useState(false)
+    const [displayImage, setDisplayImage] = useState(null);
+    const [displayOpen, setDisplayOpen] = useState(false);
 
     const toggleSelected = useCallback((e, index) => {
-        e.stopPropagation()
+        e.stopPropagation();
         setSelectedImages(prev => ({
             ...prev,
             [index]: !prev[index]
-        }))
+        }));
     }, []);
 
     const openDisplay = useCallback((e, imageIndex) => openDisplayImage(
@@ -46,15 +39,15 @@ const CropTab = ({
 
 
     const selectedImagesLength = Object.keys(selectedImages).filter(key => selectedImages[key]).length;
-    const areImagesSelected = selectedImagesLength > 0
-    const areAllImagesSelected = selectedImagesLength === screenshots?.length
+    const areImagesSelected = selectedImagesLength > 0;
+    const areAllImagesSelected = selectedImagesLength === screenshots?.length;
     
     const selectAllImages = useCallback((areAllImagesSelected) => {
         if (!screenshots) return;
 
-        let toggleOption = true
+        let toggleOption = true;
         if (areAllImagesSelected) {
-            toggleOption = false
+            toggleOption = false;
         }
 
         const allSelected = screenshots.reduce((acc, _, index) => {
@@ -82,6 +75,7 @@ const CropTab = ({
                 <Button
                     className={cn("size-fit py-1.5 px-2 hover:scale-103", areImagesSelected ? "cursor-pointer" : "cursor-not-allowed")}
                     variant={areImagesSelected ? "default" : "secondary"}
+                    onClick={() => cropScreenshots(areAllImagesSelected)}
                 >Crop Selected</Button>
                 <Button className="size-fit py-1.5 px-2 cursor-pointer hover:scale-103" variant="outline">Crop All</Button>
             </div>
@@ -145,12 +139,12 @@ const CropTab = ({
                     
                     setCloseDisplayImage={() => setDisplayImage(null)}
                     setNextDisplayImage={() => setDisplayImage(imageIndex => {
-                        if (imageIndex === screenshots.length - 1) return 0
-                        return imageIndex+1
+                        if (imageIndex === screenshots.length - 1) return 0;
+                        return imageIndex+1;
                     })}
                     setPrevDisplayImage={() => setDisplayImage(imageIndex => {
-                        if (imageIndex === 0) return screenshots.length - 1
-                        return imageIndex-1
+                        if (imageIndex === 0) return screenshots.length - 1;
+                        return imageIndex-1;
                     })}
 
                     toggleSelected={(e) => toggleSelected(e, displayImage)}
@@ -158,7 +152,7 @@ const CropTab = ({
             </div>
         </ScrollArea>
         </>
-    )
+    );
 };
 
-export default React.memo(CropTab)
+export default React.memo(CropTab);

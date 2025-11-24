@@ -1,5 +1,5 @@
-import { contextBridge, ipcRenderer } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
+import { contextBridge, ipcRenderer } from 'electron';
+import { electronAPI } from '@electron-toolkit/preload';
 
 // Custom APIs for renderer
 const api = {
@@ -14,14 +14,16 @@ const api = {
     getStorage: (key) => ipcRenderer.invoke('storage:get', key),
     setStorage: (key, value) => ipcRenderer.invoke('storage:set', key, value),
 
-    getScreenshots: (folderPath) => ipcRenderer.invoke("images:get-screenshots", folderPath),
-    getCroppedFolders: (croppedPath) => ipcRenderer.invoke("images:get-cropped-folders", croppedPath),
-    getFolderImages: (croppedPath, folderName) => ipcRenderer.invoke("images:get-folder-images", croppedPath, folderName)
-}
+    getScreenshots: (inputPath) => ipcRenderer.invoke("images:get-screenshots", inputPath),
+    getCroppedFolders: (outputPath) => ipcRenderer.invoke("images:get-cropped-folders", outputPath),
+    getFolderImages: (outputPath, folderName) => ipcRenderer.invoke("images:get-folder-images", outputPath, folderName),
+
+    cropScreenshots: (inputPath, outputPath, keepOriginalImage, screenshotFilenames) => ipcRenderer.invoke("images:crop-screenshots", inputPath, outputPath, keepOriginalImage, screenshotFilenames)
+};
 
 try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld('electron', electronAPI);
+    contextBridge.exposeInMainWorld('api', api);
 } catch (error) {
-    console.error(error)
+    console.error(error);
 }

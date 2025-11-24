@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Settings } from 'lucide-react'
+import { Settings } from 'lucide-react';
 import imageCompression from "browser-image-compression";   
 
-import SettingsForm from '@components/SettingsForm'
-import Crop from '@components/tabs/CropTab'
-import View from '@components/tabs/ViewTab'
+import SettingsForm from '@components/SettingsForm';
+import Crop from '@components/tabs/CropTab';
+import View from '@components/tabs/ViewTab';
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
-} from "@components-ui/tabs"
+} from "@components-ui/tabs";
 import {
     Sheet,
     SheetClose,
@@ -20,11 +20,12 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from "@components-ui/sheet"
-import { Separator } from "@components-ui/separator"
+} from "@components-ui/sheet";
+import { Separator } from "@components-ui/separator";
 import { Button } from '@components-ui/button';
 
 import { useSettings } from "@renderer/context/SettingsContext";
+import { success } from 'zod';
 
 
 const MainScreen = () => {
@@ -32,7 +33,7 @@ const MainScreen = () => {
 
     const [screenshots, setScreenshots] = useState(null);
     const screenshotsCacheRef = useRef(null);
-    const [selectedScreenshots, setSelectedScreenshots] = useState({})
+    const [selectedScreenshots, setSelectedScreenshots] = useState({});
 
     const [croppedFolders, setCroppedFolders] = useState({}); 
     const [openedFolders, setOpenedFolders] = useState([]);
@@ -45,13 +46,13 @@ const MainScreen = () => {
      **************************************************************************/
     // GET SCREENSHOTS FUNCTION ------------------------------------------------ 
     const getScreenshots = useCallback(async () => {
-        setScreenshots(null)
+        setScreenshots(null);
         const receivedScreenshots = await window.api.getScreenshots(userSettings.screenshotFolderPath);
         setScreenshots(receivedScreenshots.map(() => null));
         
         let completed = 0;
 
-        receivedScreenshots.forEach(async ({ buffer }, index) => {
+        receivedScreenshots.forEach(async ({ name, buffer }, index) => {
             const blob = new Blob([buffer.buffer], { type: "image/*" });
 
             const compressed = await imageCompression(blob, {
@@ -63,10 +64,9 @@ const MainScreen = () => {
             setScreenshots(prev => {
                 const newArr = [...prev];
                 newArr[index] = {
+                    name: name,
                     basicUrl: URL.createObjectURL(compressed),
                     displayUrl: URL.createObjectURL(blob),
-                    selected: false,
-                    toggleSelected: null,
                 };
                 screenshotsCacheRef.current = newArr;
                 return newArr;
@@ -74,7 +74,7 @@ const MainScreen = () => {
 
             completed++;
         });
-    }, [userSettings?.screenshotFolderPath])
+    }, [userSettings?.screenshotFolderPath]);
     
 
     // GETS SCREENSHOTS ON START -----------------------------------------------
@@ -86,27 +86,45 @@ const MainScreen = () => {
             return;
         }
 
-        getScreenshots()
+        getScreenshots();
     }, [getScreenshots]);
 
 
     // REFRESHES SCREENSHOTS ---------------------------------------------------
     const refreshScreenshots = () => {
-        setSelectedScreenshots({})
+        setSelectedScreenshots({});
         screenshotsCacheRef.current = null;
         getScreenshots();
-    }
+    };
+
+
+    // CROP SCREENSHOTS --------------------------------------------------------
+    const cropScreenshots = async (areAllImagesSelected = false) => {
+        if (!userSettings?.destinationFolderPath || !userSettings.screenshotFolderPath || !userSettings.keepOriginalImage) return;
+
+        if (areAllImagesSelected) {
+
+            return;
+        }
+
+        const selectedScreenshotFilenames = Object.entries(selectedScreenshots)
+            .filter(([_, selected]) => selected)
+            .map(([index, _]) => screenshots[index].name);
+        
+        const success = await window.api.cropScreenshots(userSettings.screenshotFolderPath, userSettings.destinationFolderPath, userSettings.keepOriginalImage, selectedScreenshotFilenames);
+
+        if (success) refreshScreenshots();
+    };
 
 
     /************************************************************************** 
      *                             CROPPED IMAGES                             * 
      **************************************************************************/
-    // GET CROPPED IMAGE FOLDERS FUNCTION ---------------------------------------------
+    // GET CROPPED IMAGE FOLDERS FUNCTION --------------------------------------
     const getCroppedImages = useCallback(async () => {
         if (!userSettings?.destinationFolderPath) return;
 
-        const croppedPath = `${userSettings.destinationFolderPath}/cropped`;
-        const folderNames = await window.api.getCroppedFolders(croppedPath);
+        const folderNames = await window.api.getCroppedFolders(userSettings.destinationFolderPath);
 
         const folders = {};
         for (const {folderName, imageCount} of folderNames) {
@@ -129,8 +147,7 @@ const MainScreen = () => {
         const folderData = croppedFolders[folder];
         if (!folderData || folderData.loaded) return;
 
-        const croppedPath = `${userSettings.destinationFolderPath}/cropped`;
-        const folderImages = await window.api.getFolderImages(croppedPath, folder);
+        const folderImages = await window.api.getFolderImages(userSettings.destinationFolderPath, folder);
 
         let completed = 0;
 
@@ -149,8 +166,6 @@ const MainScreen = () => {
                     name,
                     basicUrl: URL.createObjectURL(compressed),
                     displayUrl: URL.createObjectURL(blob),
-                    selected: false,
-                    toggleSelected: null,
                 };
 
                 completed++;
@@ -197,7 +212,7 @@ const MainScreen = () => {
                         <Settings />
                     </Button>
                 </SheetTrigger>
-                <SheetContent onOpenAutoFocus={(e) => { e.preventDefault() }}>
+                <SheetContent onOpenAutoFocus={(e) => { e.preventDefault(); }}>
                     <SheetHeader>
                         <SheetTitle>Settings</SheetTitle>
                         <SheetDescription />
@@ -219,11 +234,13 @@ const MainScreen = () => {
                 <Separator />
             </div>
             <TabsContent value="crop" className="size-full overflow-hidden px-6 flex flex-col">
+                <Button variant="secondary" onClick={() => cropScreenshots()}>Test</Button>
                 <Crop
                     screenshots={screenshots}
                     selectedImages={selectedScreenshots}
                     setSelectedImages={setSelectedScreenshots}
                     refreshImages={refreshScreenshots}
+                    cropScreenshots={cropScreenshots}
                 />
             </TabsContent>
             <TabsContent value="view" className="size-full overflow-hidden px-6">
@@ -238,7 +255,7 @@ const MainScreen = () => {
             </TabsContent>
         </Tabs>
         </>
-    )
-}
+    );
+};
 
-export default MainScreen
+export default MainScreen;

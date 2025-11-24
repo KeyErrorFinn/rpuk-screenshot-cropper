@@ -1,18 +1,18 @@
 import { useState } from "react";
 
-import SettingsForm from '@components/SettingsForm'
+import SettingsForm from '@components/SettingsForm';
 import {
     Card,
     CardContent,
     CardFooter,
     CardHeader,
-} from "@components-ui/card"
-import { Separator } from "@components-ui/separator"
-import { TGH2, TGH3, TGP } from "@components-ui/typography"
-import { ScrollArea } from "@components-ui/scroll-area"
+} from "@components-ui/card";
+import { Separator } from "@components-ui/separator";
+import { TGH2, TGH3, TGP } from "@components-ui/typography";
+import { ScrollArea } from "@components-ui/scroll-area";
 import { Button } from '@components-ui/button';
 
-import { cn } from "@renderer/lib/utils"
+import { cn } from "@renderer/lib/utils";
 
 
 const SetupScreen = () => {
@@ -46,7 +46,7 @@ const SetupScreen = () => {
                 </div>
             </div>
         </ScrollArea>
-    )
-}
+    );
+};
 
-export default SetupScreen
+export default SetupScreen;
