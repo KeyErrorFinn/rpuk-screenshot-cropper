@@ -81,7 +81,7 @@ The application was built to reduce a repetitive screenshot workflow while keepi
 
 Large screenshot folders also made startup performance important. The renderer uses lightweight WebP thumbnails, while the backend indexes image metadata and reuses cached summaries instead of repeatedly decoding every full-size image.
 
-The automated checks cover linting and a production Electron build. Packaging remains platform-specific, so Windows, macOS, and Linux installers should still be tested on their target operating systems. A useful next step would be integration tests around source deletion, keep-original behaviour, and failures during a batch.
+Continuous integration verifies the production Electron build. The lint command is available locally and currently exposes older formatting and component-validation cleanup work. Packaging remains platform-specific, so Windows, macOS, and Linux installers should still be tested on their target operating systems. A useful next step would be integration tests around source deletion, keep-original behaviour, and failures during a batch.
 
 <!-- documentation-extras -->
 
