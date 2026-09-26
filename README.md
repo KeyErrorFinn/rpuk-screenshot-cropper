@@ -2,6 +2,16 @@
 
 [![Last commit](https://img.shields.io/github/last-commit/KeyErrorFinn/rpuk-screenshot-cropper)](https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/commits/main) [![Issues](https://img.shields.io/github/issues/KeyErrorFinn/rpuk-screenshot-cropper)](https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/issues)
 
+<p align="center">
+  <img alt="Electron" src="https://img.shields.io/badge/Electron-47848F?logo=electron&logoColor=fff" />
+  <img alt="React" src="https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB" />
+  <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000" />
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=fff" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind%20CSS-06B6D4?logo=tailwindcss&logoColor=fff" />
+  <img alt="Sharp" src="https://img.shields.io/badge/Sharp-99CC00?logo=sharp&logoColor=000" />
+  <img alt="npm" src="https://img.shields.io/badge/npm-CB3837?logo=npm&logoColor=fff" />
+</p>
+
 A desktop Electron application for reviewing screenshots, removing the fixed FiveM/RPUK interface bands, and organising processed images into date-based folders.
 
 ## Features
