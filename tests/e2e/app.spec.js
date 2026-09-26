@@ -5,7 +5,11 @@ import { tmpdir } from "node:os";
 import sharp from "sharp";
 
 const packagedExecutables = { win32: join(process.cwd(), "dist", "win-unpacked", "rpuk-screenshot-cropper.exe"), linux: join(process.cwd(), "dist", "linux-unpacked", "rpuk-screenshot-cropper"), darwin: join(process.cwd(), "dist", "mac", "RPUK Screenshot Cropper.app", "Contents", "MacOS", "RPUK Screenshot Cropper") };
-const launchPackagedApp = userData => electron.launch({ executablePath: packagedExecutables[process.platform], args: [`--user-data-dir=${userData}`], env: Object.fromEntries(Object.entries(process.env).filter(([key]) => key !== "ELECTRON_RUN_AS_NODE")) });
+const launchPackagedApp = userData => {
+    const args = [`--user-data-dir=${userData}`];
+    if (process.platform === "linux") args.push("--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage");
+    return electron.launch({ executablePath: packagedExecutables[process.platform], args, env: Object.fromEntries(Object.entries(process.env).filter(([key]) => key !== "ELECTRON_RUN_AS_NODE")) });
+};
 
 test("main and preload expose the application shell", async () => {
     const userData = await mkdtemp(join(tmpdir(), "rpuk-e2e-"));
