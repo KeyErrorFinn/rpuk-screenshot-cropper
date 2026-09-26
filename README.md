@@ -62,17 +62,19 @@ npm run build:linux
 
 ## Project structure
 
-- `src/main/`  -  Electron lifecycle, IPC, filesystem operations, and Sharp cropping.
-- `src/preload/`  -  isolated renderer API.
-- `src/renderer/`  -  React interface, settings, crop, and viewer tabs.
-- `electron-builder.yml`  -  packaging configuration.
-- `resources/` and `build/`  -  application icons and packaging assets.
+- `src/main/`, Electron lifecycle, IPC, filesystem operations, and Sharp cropping.
+- `src/preload/`, isolated renderer API.
+- `src/renderer/`, React interface, settings, crop, and viewer tabs.
+- `electron-builder.yml`, packaging configuration.
+- `resources/` and `build/`, application icons and packaging assets.
 
 ## Important notes
 
 - Back up valuable screenshots before first use because processed source files are removed.
 - The crop dimensions are tailored to a specific screenshot layout.
 - Packaging targets should be tested on their respective operating systems.
+
+<!-- documentation-extras -->
 
 ## Project flow
 
@@ -83,3 +85,20 @@ flowchart LR
     Main --> Sharp["Sharp crop pipeline"]
     Sharp --> Folders["Dated cropped/original folders"]
 ```
+
+<details>
+<summary>Documentation and maintenance notes</summary>
+
+- Commands and behaviour in this README are derived from the files currently committed to the repository.
+- External services, games, websites, browser APIs, and file formats can change independently of this project.
+- When reporting a problem, include the operating system, runtime version, exact command, and complete error text with secrets removed.
+
+</details>
+
+## Contributing
+
+Focused fixes are welcome. Before changing behaviour, open an issue describing the problem and intended result. Keep credentials, generated secrets, personal data, and machine-specific configuration out of commits. Update this README whenever commands, configuration, paths, or supported behaviour change.
+
+## Licence
+
+No project-level licence is currently declared in this repository. Copyright remains with the repository owner and other contributors; obtain permission before redistributing or incorporating the code elsewhere. Third-party assets and dependencies retain their own licences.
