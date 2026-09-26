@@ -74,6 +74,14 @@ npm run build:linux
 - The crop dimensions are tailored to a specific screenshot layout.
 - Packaging targets should be tested on their respective operating systems.
 
+## Engineering notes
+
+The application was built to reduce a repetitive screenshot workflow while keeping filesystem access away from the web-facing renderer. Electron's main process owns file discovery, image processing, and output writes. The context-isolated preload bridge exposes only the operations the React interface needs.
+
+Large screenshot folders also made startup performance important. The renderer uses lightweight WebP thumbnails, while the backend indexes image metadata and reuses cached summaries instead of repeatedly decoding every full-size image.
+
+The automated checks cover linting and a production Electron build. Packaging remains platform-specific, so Windows, macOS, and Linux installers should still be tested on their target operating systems. A useful next step would be integration tests around source deletion, keep-original behaviour, and failures during a batch.
+
 <!-- documentation-extras -->
 
 ## Project flow
