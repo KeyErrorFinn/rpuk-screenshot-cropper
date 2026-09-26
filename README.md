@@ -1,6 +1,9 @@
 # RPUK Screenshot Cropper
 
-[![Last commit](https://img.shields.io/github/last-commit/KeyErrorFinn/rpuk-screenshot-cropper)](https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/commits/main) [![Issues](https://img.shields.io/github/issues/KeyErrorFinn/rpuk-screenshot-cropper)](https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/issues)
+<p align="center">
+  <a href="https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/commits/main"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/KeyErrorFinn/rpuk-screenshot-cropper" /></a>
+  <a href="https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/KeyErrorFinn/rpuk-screenshot-cropper" /></a>
+</p>
 
 <p align="center">
   <img alt="Electron" src="https://img.shields.io/badge/Electron-47848F?logo=electron&logoColor=fff" />
