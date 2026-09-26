@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { join } from "node:path";
 import { createImageActions, imageActionChannels, registerImageActionHandlers } from "../src/main/imageActions.js";
 
+const sourceRoot = process.platform === "win32" ? "C:\\Shots" : "/tmp/rpuk-shots";
+
 function createDependencies({ empty = false, openError = "" } = {}) {
     const calls = { opened: [], created: [], copied: [] };
     const dependencies = {
@@ -52,8 +54,9 @@ test("folder opening rejects missing arguments", async () => {
 
 test("copies a source image using only the filename basename", () => {
     const { calls, dependencies } = createDependencies();
-    assert.equal(createImageActions(dependencies).copySource("C:\\Shots", "..\\outside.png"), true);
-    assert.equal(calls.created[0], join("C:\\Shots", "outside.png"));
+    const filename = process.platform === "win32" ? "..\\outside.png" : "../outside.png";
+    assert.equal(createImageActions(dependencies).copySource(sourceRoot, filename), true);
+    assert.equal(calls.created[0], join(sourceRoot, "outside.png"));
     assert.equal(calls.copied.length, 1);
 });
 
@@ -66,6 +69,6 @@ test("copies a cropped image from its dated folder", () => {
 
 test("does not write an empty native image to the clipboard", () => {
     const { calls, dependencies } = createDependencies({ empty: true });
-    assert.equal(createImageActions(dependencies).copySource("C:\\Shots", "test.png"), false);
+    assert.equal(createImageActions(dependencies).copySource(sourceRoot, "test.png"), false);
     assert.equal(calls.copied.length, 0);
 });
