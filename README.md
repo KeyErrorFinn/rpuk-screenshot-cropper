@@ -1,6 +1,7 @@
 # RPUK Screenshot Cropper
 
 <p align="center">
+  <a href="https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/actions/workflows/ci.yml"><img alt="Continuous integration" src="https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/actions/workflows/ci.yml/badge.svg" /></a>
   <a href="https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/commits/main"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/KeyErrorFinn/rpuk-screenshot-cropper" /></a>
   <a href="https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/KeyErrorFinn/rpuk-screenshot-cropper" /></a>
 </p>
