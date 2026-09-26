@@ -1,32 +1,25 @@
+/* eslint-disable react-refresh/only-export-components */
 import { useEffect, useState } from "react";
 import { createRoot } from 'react-dom/client';
 
 import AppMenuBar from '@components/Menubar';
 import MainScreen from '@components/MainScreen';
 import SetupScreen from '@components/SetupScreen';
-import { Toaster } from "@components-ui/sonner";
+import { Toaster } from "sonner";
 
 import { SettingsProvider, useSettings } from "@renderer/context/SettingsContext";
 import './styles/main.scss';
 import "./styles/tailwind.css";
 
-// TODO:
-// Add CROP ALL screenshot functionality
-// Add message on crop success/fail
-// Make crop buttons inactive when cropping
-
-// Add file copy to cropped images
-// Add file upload functionality to cropped images
-// Add link copy to cropped images
-// Fix image icons being cropped on view
 function App() {
     const [isMaximized, setIsMaximized] = useState(false);
     const { userSettings } = useSettings();
 
     useEffect(() => {
         if (window.api) {
-            window.api.onWindowMaximize(() => setIsMaximized(true));
-            window.api.onWindowRestore(() => setIsMaximized(false));
+            const stopMaximize = window.api.onWindowMaximize(() => setIsMaximized(true));
+            const stopRestore = window.api.onWindowRestore(() => setIsMaximized(false));
+            return () => { stopMaximize(); stopRestore(); };
         }
     }, []);
 
@@ -44,6 +37,6 @@ createRoot(document.getElementById('root')).render(
         <SettingsProvider>
             <App />
         </SettingsProvider>
-        <Toaster position="top-center" richColors />
+        <Toaster position="top-center" offset={44} theme="dark" richColors closeButton />
     </>
 );

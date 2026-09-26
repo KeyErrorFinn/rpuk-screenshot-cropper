@@ -1,52 +1,19 @@
 import { useState } from "react";
-
-import SettingsForm from '@components/SettingsForm';
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-} from "@components-ui/card";
-import { Separator } from "@components-ui/separator";
-import { TGH2, TGH3, TGP } from "@components-ui/typography";
-import { ScrollArea } from "@components-ui/scroll-area";
-import { Button } from '@components-ui/button';
-
-import { cn } from "@renderer/lib/utils";
-
+import SettingsForm from "@components/SettingsForm";
 
 const SetupScreen = () => {
     const [isValid, setIsValid] = useState(false);
 
-    return (
-        <ScrollArea className="overflow-hidden [&>div>div]:h-full h-full">
-            <div className="flex flex-col h-full px-8 py-4 items-center">
-                <div className="w-full">
-                    <TGH2 className="text-center">Welcome!</TGH2>
-                    <TGP className="mt-1! text-center">To begin, please set some settings.</TGP>
-                </div>
-                <div className="flex grow w-full py-2 items-center justify-center">
-                    <Card className="w-full max-w-xl">
-                        <CardHeader>
-                            <TGH3 className="text-center">Configuration</TGH3>
-                            <Separator />
-                        </CardHeader>
-                        <CardContent>
-                            <SettingsForm formID="settings-form" onValidationChange={setIsValid} />
-                        </CardContent>
-                        <CardFooter>
-                            <Button
-                                type="submit"
-                                form="settings-form"
-                                variant={isValid ? "default" : "outline"}
-                                className={cn("w-full mt-5", isValid ? "" : "cursor-not-allowed disabled:pointer-events-auto")}
-                            >Save changes</Button>
-                        </CardFooter>
-                    </Card>
-                </div>
-            </div>
-        </ScrollArea>
-    );
+    return <main className="flex h-full items-center justify-center overflow-auto bg-[#090a0c] p-8 text-white">
+        <section className="w-full max-w-lg rounded-xl border border-white/10 bg-[#141518] p-7 shadow-2xl shadow-black/30">
+            <header className="mb-6 border-b border-white/10 pb-5 text-center">
+                <h1 className="text-xl font-semibold tracking-tight">Set up RPUK Cropper</h1>
+                <p className="mt-1.5 text-xs text-white/45">Choose where screenshots come from and where cropped images should go.</p>
+            </header>
+            <SettingsForm formID="settings-form" onValidationChange={setIsValid} />
+            <button type="submit" form="settings-form" disabled={!isValid} className="mt-7 h-9 w-full rounded-md bg-emerald-600 text-xs font-semibold text-white transition hover:bg-emerald-500 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/30">Save settings</button>
+        </section>
+    </main>;
 };
 
 export default SetupScreen;

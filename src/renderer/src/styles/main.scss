@@ -27,3 +27,31 @@ body,
     display: flex;
     flex-direction: column;
 }
+
+body {
+    overflow: hidden;
+    background: #090a0c;
+    font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    text-rendering: optimizeLegibility;
+}
+button, input { font: inherit; }
+button, [role="button"], [role="switch"] { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+.app-menu-bar { -webkit-app-region: drag; }
+.window-controls, .window-controls button { -webkit-app-region: no-drag; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { border: 3px solid transparent; border-radius: 999px; background: #3a3d44; background-clip: padding-box; }
+::-webkit-scrollbar-track { background: transparent; }
+
+[data-sonner-toast][data-styled="true"] {
+    padding-right: 42px !important;
+}
+
+[data-sonner-toast] [data-close-button] {
+    top: 50% !important;
+    right: 9px !important;
+    left: auto !important;
+    transform: translateY(-50%) !important;
+}

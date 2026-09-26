@@ -8,14 +8,18 @@ export default defineConfig({
         plugins: [externalizeDepsPlugin()]
     },
     preload: {
-        plugins: [externalizeDepsPlugin()]
+        plugins: [externalizeDepsPlugin()],
+        build: {
+            rollupOptions: {
+                output: { format: 'cjs', entryFileNames: '[name].cjs' }
+            }
+        }
     },
     renderer: {
         resolve: {
             alias: {
                 '@renderer': resolve('src/renderer/src'),
-                '@components': resolve('src/renderer/src/components'),
-                '@components-ui': resolve('src/renderer/src/components/ui')
+                '@components': resolve('src/renderer/src/components')
             }
         },
         plugins: [react(), tailwindcss()]

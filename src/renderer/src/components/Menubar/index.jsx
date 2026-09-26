@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
 import { Minus, Maximize, Minimize, X, Camera } from "lucide-react";
-
-import {
-    Menubar,
-} from "@components-ui/menubar";
-
-import './menubar.scss';
+import { useAppVersion } from "@renderer/hooks/useAppVersion";
 
 const AppMenuBar = () => {
     const [isMaximized, setIsMaximized] = useState(false);
+    const appVersion = useAppVersion();
 
     useEffect(() => {
         if (window.api) {
-            window.api.onWindowMaximize(() => setIsMaximized(true));
-            window.api.onWindowRestore(() => setIsMaximized(false));
+            const stopMaximize = window.api.onWindowMaximize(() => setIsMaximized(true));
+            const stopRestore = window.api.onWindowRestore(() => setIsMaximized(false));
+            return () => { stopMaximize(); stopRestore(); };
         }
     }, []);
 
@@ -22,25 +19,24 @@ const AppMenuBar = () => {
     const handleClose = () => window.api?.close();
 
     return (
-        <Menubar className="app-menu-bar rounded-none bg-secondary h-8 drag flex justify-center w-full select-none border-none z-40">
-            <div className="text-sm flex items-center gap-1" onDoubleClick={() => console.log("g")}>
-                <Camera size={16} fill="#0909b" />
-                <div>RPUK Screenshot Cropper</div>
+        <header className="app-menu-bar relative z-40 flex h-8 w-full shrink-0 select-none items-center justify-center border-b border-white/10 bg-[#24262a] text-white">
+            <div className="flex items-center gap-1.5 text-xs font-medium">
+                <Camera size={14} />
+                <span>RPUK Screenshot Cropper</span>
+                {appVersion && <span className="text-[9px] font-normal text-white/35">v{appVersion}</span>}
             </div>
-            <div className="absolute right-0 flex gap-2 pr-2">
-                <button onClick={handleMinimize} className="p-1 hover:bg-input rounded">
+            <div className="window-controls absolute inset-y-0 right-0 flex">
+                <button aria-label="Minimize" title="Minimize to tray" onClick={handleMinimize} className="grid w-10 place-items-center text-white/70 hover:bg-white/10 hover:text-white">
                     <Minus size={14} />
                 </button>
-                <button onClick={handleMaximize} className="p-1 hover:bg-input rounded">
+                <button aria-label={isMaximized ? "Restore" : "Maximize"} title={isMaximized ? "Restore window" : "Maximize window"} onClick={handleMaximize} className="grid w-10 place-items-center text-white/70 hover:bg-white/10 hover:text-white">
                     {!isMaximized ? <Maximize size={12} /> : <Minimize size={12} />}
                 </button>
-                <button onClick={handleClose}
-                    className="p-1 hover:bg-red-500 hover:text-white rounded"
-                >
+                <button aria-label="Close" title="Close application" onClick={handleClose} className="grid w-10 place-items-center text-white/70 hover:bg-red-600 hover:text-white">
                     <X size={14} />
                 </button>
             </div>
-        </Menubar>
+        </header>
     );
 };
 

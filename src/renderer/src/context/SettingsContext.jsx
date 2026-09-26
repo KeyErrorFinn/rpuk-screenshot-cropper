@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types, react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from "react";
 
 const SettingsContext = createContext();
@@ -8,11 +9,12 @@ export function SettingsProvider({ children }) {
     useEffect(() => {
         async function loadSettings() {
             if (window.api) {
-                const settings = await window.api.getStorage("settings");
+                const settings = await window.api.getSettings();
                 setUserSettings(settings);
             }
         }
         loadSettings();
+        return window.api?.onSettingsChanged?.(setUserSettings);
     }, []);
 
     return (
