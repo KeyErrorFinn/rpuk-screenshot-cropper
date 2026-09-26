@@ -83,6 +83,8 @@ npm.cmd run build:linux
 
 The Node test suite covers services, crop settings, crop assistance, transactions, recovery, uploads, and pure application logic. Vitest covers renderer controllers, dialogs, workspace preferences, and gallery behaviour. Playwright builds an unpacked production executable and exercises the sandbox bridge, filesystem watcher, crop transaction, collision handling, and undo workflow.
 
+The GitHub Actions workflow runs the complete validation suite on Windows, matching the application's primary supported platform and its Recycle Bin-oriented workflows.
+
 The current local validation baseline is:
 
 - 89 Node tests passed.

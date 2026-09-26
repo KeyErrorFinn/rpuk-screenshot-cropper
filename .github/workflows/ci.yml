@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -31,4 +31,4 @@ jobs:
       - name: Build
         run: npm run build
       - name: Run packaged end-to-end tests
-        run: xvfb-run --auto-servernum npm run test:e2e
+        run: npm run test:e2e
