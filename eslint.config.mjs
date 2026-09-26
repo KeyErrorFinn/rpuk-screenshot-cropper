@@ -27,5 +27,10 @@ export default [
             ...eslintPluginReactRefresh.configs.vite.rules
         }
     },
-    eslintConfigPrettier
+    eslintConfigPrettier,
+    {
+        rules: {
+            'prettier/prettier': 'off'
+        }
+    }
 ]

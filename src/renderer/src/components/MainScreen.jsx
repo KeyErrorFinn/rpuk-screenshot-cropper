@@ -67,7 +67,7 @@ const MainScreen = () => {
             toast.info("Resuming interrupted Gyazo upload");
             const result = await window.api.uploadToGyazo(pending.outputPath, userSettings.gyazoAccessToken, pending.selectedImages);
             if (result.uploaded.length) toast.success(`Restored upload completed for ${result.uploaded.length} image${result.uploaded.length === 1 ? "" : "s"}`);
-            refreshCroppedImages();
+            refreshCroppedImagesRef.current?.();
         }).catch(error => toast.error(`Could not resume upload: ${error.message}`));
     }, [userSettings.gyazoAccessToken]);
 

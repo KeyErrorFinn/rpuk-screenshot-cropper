@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types, react-refresh/only-export-components */
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, ChevronLeft, ChevronRight, CloudUpload, Copy, Link, LoaderCircle, Maximize2, Minimize2, ScanLine, Square, Star, X, ZoomIn, ZoomOut } from "lucide-react";
 import { getImageViewerAction } from "@renderer/lib/imageViewerShortcuts";
 import { getCropInsetsForResolution } from "../../../../../shared/cropSettings.js";
@@ -20,7 +20,7 @@ const ImageDisplay = ({ displayState, allImages, specificImageIndex, selectedIma
     const [viewerFullscreen, setViewerFullscreen] = useState(false);
     const panStartRef = useRef(null);
     const lastWheelRef = useRef(0);
-    const close = () => { window.api.setFullscreen(false); setViewerFullscreen(false); setOpen(false); setCloseDisplayImage(); };
+    const close = useCallback(() => { window.api.setFullscreen(false); setViewerFullscreen(false); setOpen(false); setCloseDisplayImage(); }, [setCloseDisplayImage, setOpen]);
 
     useEffect(() => () => window.api.setFullscreen(false), []);
 
@@ -38,7 +38,7 @@ const ImageDisplay = ({ displayState, allImages, specificImageIndex, selectedIma
         };
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [copyImage, open, setCloseDisplayImage, setNextDisplayImage, setOpen, setPrevDisplayImage, toggleSelected]);
+    }, [close, copyImage, open, setNextDisplayImage, setPrevDisplayImage, toggleSelected]);
 
     const currentImage = allImages?.[specificImageIndex];
     const previewInsets = enableCropPreview && currentImage?.width && currentImage?.height ? getCropInsetsForResolution({ cropInsets, cropPresets }, currentImage.width, currentImage.height) : null;
