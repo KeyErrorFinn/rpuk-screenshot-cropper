@@ -16,7 +16,14 @@ test('keeps loaded images when a folder summary has not changed', () => {
 
 test('uses placeholders when the contents of a folder changed', () => {
     const result = reconcileCroppedFolderSummaries(
-        { dated: { loaded: true, uploadedCount: 0, contentSignature: 'old', images: [{ name: 'old.png' }] } },
+        {
+            dated: {
+                loaded: true,
+                uploadedCount: 0,
+                contentSignature: 'old',
+                images: [{ name: 'old.png' }]
+            }
+        },
         [{ folderName: 'dated', imageCount: 2, uploadedCount: 0, contentSignature: 'new' }]
     )
 

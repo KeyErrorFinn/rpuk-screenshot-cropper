@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/actions/workflows/ci.yml"><img alt="Continuous integration" src="https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/actions/workflows/ci.yml/badge.svg" /></a>
-  <a href="https://img.shields.io/badge/version-2.0.2-2563eb"><img alt="Version 2.0.2" src="https://img.shields.io/badge/version-2.0.2-2563eb" /></a>
+  <a href="https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/blob/main/package.json"><img alt="Version from package.json" src="https://img.shields.io/github/package-json/v/KeyErrorFinn/rpuk-screenshot-cropper?label=version&amp;color=2563eb" /></a>
   <a href="https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/commits/main"><img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/KeyErrorFinn/rpuk-screenshot-cropper" /></a>
   <a href="https://github.com/KeyErrorFinn/rpuk-screenshot-cropper/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/KeyErrorFinn/rpuk-screenshot-cropper" /></a>
 </p>
@@ -66,6 +66,7 @@ Useful commands:
 ```powershell
 npm.cmd test
 npm.cmd run test:ui
+npm.cmd run format:check
 npm.cmd run lint
 npm.cmd run build
 npm.cmd run test:e2e
@@ -83,15 +84,7 @@ npm.cmd run build:linux
 
 The Node test suite covers services, crop settings, crop assistance, transactions, recovery, uploads, and pure application logic. Vitest covers renderer controllers, dialogs, workspace preferences, and gallery behaviour. Playwright builds an unpacked production executable and exercises the sandbox bridge, filesystem watcher, crop transaction, collision handling, and undo workflow.
 
-The GitHub Actions workflow runs the complete validation suite on Windows, matching the application's primary supported platform and its Recycle Bin-oriented workflows.
-
-The current local validation baseline is:
-
-- 89 Node tests passed.
-- 10 UI tests passed.
-- 3 packaged end-to-end tests passed.
-- ESLint passed with no warnings.
-- Electron production build passed.
+The GitHub Actions workflow checks formatting, runs the complete test and lint suites, builds the Electron application, and exercises the packaged app on Windows. This matches the application's primary supported platform and its Recycle Bin-oriented workflows. The CI badge above shows the current result without embedding test counts that can become stale.
 
 ## Data and recovery
 

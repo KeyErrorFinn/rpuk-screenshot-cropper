@@ -8,10 +8,12 @@
     "homepage": "https://github.com/KeyErrorFinn/rpuk-screenshot-cropper",
     "scripts": {
         "format": "prettier --write .",
+        "format:check": "prettier --check .",
         "lint": "eslint --cache .",
         "test": "node --test tests/*.test.js",
         "test:ui": "vitest run --config vitest.config.js",
         "test:e2e": "npm run build:unpack && playwright test --config playwright.config.js",
+        "test:e2e:ci": "electron-builder --dir && playwright test --config playwright.config.js",
         "start": "electron-vite --config ./vite.config.ts preview",
         "dev": "electron-vite --config ./vite.config.ts dev",
         "build": "electron-vite --config ./vite.config.ts build",

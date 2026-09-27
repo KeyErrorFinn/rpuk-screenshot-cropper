@@ -1,29 +1,29 @@
 /* eslint-disable react/prop-types, react-refresh/only-export-components */
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from 'react'
 
-const SettingsContext = createContext();
+const SettingsContext = createContext()
 
 export function SettingsProvider({ children }) {
-    const [userSettings, setUserSettings] = useState(null);
+    const [userSettings, setUserSettings] = useState(null)
 
     useEffect(() => {
         async function loadSettings() {
             if (window.api) {
-                const settings = await window.api.getSettings();
-                setUserSettings(settings);
+                const settings = await window.api.getSettings()
+                setUserSettings(settings)
             }
         }
-        loadSettings();
-        return window.api?.onSettingsChanged?.(setUserSettings);
-    }, []);
+        loadSettings()
+        return window.api?.onSettingsChanged?.(setUserSettings)
+    }, [])
 
     return (
         <SettingsContext.Provider value={{ userSettings, setUserSettings }}>
             {children}
         </SettingsContext.Provider>
-    );
+    )
 }
 
 export function useSettings() {
-    return useContext(SettingsContext);
+    return useContext(SettingsContext)
 }

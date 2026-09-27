@@ -3,11 +3,11 @@ productName: RPUK Screenshot Cropper
 directories:
     buildResources: build
 files:
-    - "!**/.vscode/*"
-    - "!src/*"
-    - "!vite.config.{js,ts,mjs,cjs}"
-    - "!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}"
-    - "!{.env,.env.*,.npmrc,pnpm-lock.yaml}"
+    - '!**/.vscode/*'
+    - '!src/*'
+    - '!vite.config.{js,ts,mjs,cjs}'
+    - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
+    - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
 asarUnpack:
     - resources/**
 win:

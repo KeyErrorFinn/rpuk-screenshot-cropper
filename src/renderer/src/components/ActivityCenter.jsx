@@ -1,8 +1,99 @@
 /* eslint-disable react/prop-types */
-import { CheckCircle2, CircleAlert, Clock3, LoaderCircle, RotateCw, X } from "lucide-react";
+import { CheckCircle2, CircleAlert, Clock3, LoaderCircle, RotateCw, X } from 'lucide-react'
 
-const icons = { running: <LoaderCircle className="animate-spin text-emerald-400" size={14} />, complete: <CheckCircle2 className="text-emerald-400" size={14} />, failed: <CircleAlert className="text-red-400" size={14} />, queued: <Clock3 className="text-white/45" size={14} /> };
+const icons = {
+    running: <LoaderCircle className="animate-spin text-emerald-400" size={14} />,
+    complete: <CheckCircle2 className="text-emerald-400" size={14} />,
+    failed: <CircleAlert className="text-red-400" size={14} />,
+    queued: <Clock3 className="text-white/45" size={14} />
+}
 export default function ActivityCenter({ open, onClose, activities, onClear, onRetry }) {
-    if (!open) return null;
-    return <div className="fixed inset-x-0 bottom-0 top-8 z-50 flex justify-end bg-black/55" onClick={onClose}><aside role="dialog" aria-modal="true" aria-labelledby="activity-title" className="flex h-full w-[360px] flex-col border-l border-white/10 bg-[#141518] shadow-2xl" onClick={event => event.stopPropagation()}><header className="flex h-16 items-center border-b border-white/10 px-4"><div><h2 id="activity-title" className="text-sm font-semibold">Activity</h2><p className="mt-0.5 text-[11px] text-white/45">Crops, uploads and file actions</p></div><button onClick={onClear} className="ml-auto mr-1 h-8 px-2 text-[11px] text-white/45 hover:text-white">Clear finished</button><button onClick={onClose} aria-label="Close activity" className="grid size-8 place-items-center rounded-md hover:bg-white/10"><X size={15} /></button></header><div className="min-h-0 flex-1 overflow-auto p-3">{activities.length === 0 ? <p className="p-6 text-center text-xs text-white/40">No recent activity.</p> : activities.map(item => <article key={item.id} className="mb-2 rounded-lg border border-white/10 bg-[#1b1d21] p-3"><div className="flex items-center gap-2">{icons[item.status] || icons.queued}<p className="min-w-0 flex-1 truncate text-xs font-semibold">{item.title}</p><span className="text-[10px] text-white/35">{new Date(item.createdAt).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}</span></div>{item.detail && <p className={`mt-2 text-[11px] leading-4 ${item.status === "failed" ? "text-red-300" : "text-white/50"}`}>{item.detail}</p>}{item.progress != null && item.status === "running" && <div className="mt-2 h-1 overflow-hidden rounded bg-white/10"><div className="h-full bg-emerald-500" style={{ width: `${Math.round(item.progress * 100)}%` }} /></div>}{item.status === "failed" && item.retry && <button onClick={() => onRetry(item)} className="mt-2 flex h-8 items-center gap-1.5 rounded-md border border-white/10 px-2.5 text-[11px] font-semibold hover:bg-white/10"><RotateCw size={12} />Retry</button>}</article>)}</div></aside></div>;
+    if (!open) return null
+    return (
+        <div
+            className="fixed inset-x-0 bottom-0 top-8 z-50 flex justify-end bg-black/55"
+            onClick={onClose}
+        >
+            <aside
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="activity-title"
+                className="flex h-full w-[360px] flex-col border-l border-white/10 bg-[#141518] shadow-2xl"
+                onClick={(event) => event.stopPropagation()}
+            >
+                <header className="flex h-16 items-center border-b border-white/10 px-4">
+                    <div>
+                        <h2 id="activity-title" className="text-sm font-semibold">
+                            Activity
+                        </h2>
+                        <p className="mt-0.5 text-[11px] text-white/45">
+                            Crops, uploads and file actions
+                        </p>
+                    </div>
+                    <button
+                        onClick={onClear}
+                        className="ml-auto mr-1 h-8 px-2 text-[11px] text-white/45 hover:text-white"
+                    >
+                        Clear finished
+                    </button>
+                    <button
+                        onClick={onClose}
+                        aria-label="Close activity"
+                        className="grid size-8 place-items-center rounded-md hover:bg-white/10"
+                    >
+                        <X size={15} />
+                    </button>
+                </header>
+                <div className="min-h-0 flex-1 overflow-auto p-3">
+                    {activities.length === 0 ? (
+                        <p className="p-6 text-center text-xs text-white/40">No recent activity.</p>
+                    ) : (
+                        activities.map((item) => (
+                            <article
+                                key={item.id}
+                                className="mb-2 rounded-lg border border-white/10 bg-[#1b1d21] p-3"
+                            >
+                                <div className="flex items-center gap-2">
+                                    {icons[item.status] || icons.queued}
+                                    <p className="min-w-0 flex-1 truncate text-xs font-semibold">
+                                        {item.title}
+                                    </p>
+                                    <span className="text-[10px] text-white/35">
+                                        {new Date(item.createdAt).toLocaleTimeString('en-GB', {
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })}
+                                    </span>
+                                </div>
+                                {item.detail && (
+                                    <p
+                                        className={`mt-2 text-[11px] leading-4 ${item.status === 'failed' ? 'text-red-300' : 'text-white/50'}`}
+                                    >
+                                        {item.detail}
+                                    </p>
+                                )}
+                                {item.progress != null && item.status === 'running' && (
+                                    <div className="mt-2 h-1 overflow-hidden rounded bg-white/10">
+                                        <div
+                                            className="h-full bg-emerald-500"
+                                            style={{ width: `${Math.round(item.progress * 100)}%` }}
+                                        />
+                                    </div>
+                                )}
+                                {item.status === 'failed' && item.retry && (
+                                    <button
+                                        onClick={() => onRetry(item)}
+                                        className="mt-2 flex h-8 items-center gap-1.5 rounded-md border border-white/10 px-2.5 text-[11px] font-semibold hover:bg-white/10"
+                                    >
+                                        <RotateCw size={12} />
+                                        Retry
+                                    </button>
+                                )}
+                            </article>
+                        ))
+                    )}
+                </div>
+            </aside>
+        </div>
+    )
 }
